@@ -2,12 +2,16 @@ const { MongoClient } = require('mongodb');
 
 async function main() {
     // Replace <connection-string> with your MongoDB URI
-    const uri = "mongodb://localhost:27017" || "<atlas-connection-string>";
+    const uri = "mongodb://localhost:27017";
     const client = new MongoClient(uri);
+
+    console.time("Connection Time");
 
     try {
         await client.connect();
         console.log("Connected to MongoDB!");
+
+        console.timeEnd("Connection Time");
 
         const db = client.db("testDB");
         const collection = db.collection("users");
