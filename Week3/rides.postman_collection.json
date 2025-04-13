@@ -1,0 +1,140 @@
+{
+	"info": {
+		"_postman_id": "4f6f5db7-09b1-4c97-9ffd-320360844749",
+		"name": "rides",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44009729",
+		"_collection_link": "https://iqbalfirdausy.postman.co/workspace/Iqbal-Firdausy's-Workspace~f164771c-80b9-4922-8505-52df3fcca48d/collection/44009729-4f6f5db7-09b1-4c97-9ffd-320360844749?action=share&source=collection_link&creator=44009729"
+	},
+	"item": [
+		{
+			"name": "http://localhost:3000/rides",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"pickupLocation\": \"Central Park\",\r\n    \"destination\": \"Time Square\",\r\n    \"driverId\": \"DRIVER123\",\r\n    \"status\": \"requested\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/rides",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rides"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/rides",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": \"cancelled\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/rides",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rides"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/rides/67faf950722be5c806085772",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": \"cancelled\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/rides/67faf950722be5c806085772",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rides",
+						"67faf950722be5c806085772"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/rides/67fafc7f2d1cd33d9695f9c1",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"status\": \"cancelled\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/rides/67fafc7f2d1cd33d9695f9c1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"rides",
+						"67fafc7f2d1cd33d9695f9c1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

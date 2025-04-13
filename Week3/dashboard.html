@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dashboard - Ride Management</title>
+    <style>
+        /* Reset default margin and padding */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            color: #333;
+        }
+
+        /* Container to center content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Card style for the rides list */
+        .ride-card {
+            background: #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ride-card h3 {
+            font-size: 1.5rem;
+            color: #007BFF;
+        }
+
+        .ride-card p {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        /* Ride status styling */
+        .status {
+            padding: 5px 10px;
+            border-radius: 15px;
+            text-transform: capitalize;
+        }
+
+        .status.requested {
+            background-color: #ffcc00;
+            color: white;
+        }
+
+        .status.cancelled {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .status.completed {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        /* Form to add new ride */
+        .form-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-container input,
+        .form-container textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+
+        .form-container textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        .form-container button {
+            padding: 12px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .form-container button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Button to change status */
+        .cancel-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .cancel-btn:hover {
+            background-color: #d32f2f;
+        }
+
+        /* Make the page responsive */
+        @media (max-width: 768px) {
+            .ride-card {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .ride-card h3 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Ride Management Dashboard</h1>
+
+        <!-- Form to add a new ride -->
+        <div class="form-container">
+            <h3>Add New Ride</h3>
+            <form id="ride-form">
+                <input type="text" id="pickupLocation" placeholder="Pickup Location" required>
+                <input type="text" id="destination" placeholder="Destination" required>
+                <input type="text" id="driverId" placeholder="Driver ID" required>
+                <textarea id="status" placeholder="Status" required>requested</textarea>
+                <button type="submit">Add Ride</button>
+            </form>
+        </div>
+
+        <!-- List of rides -->
+        <div id="rides-list"></div>
+    </div>
+
+    <script>
+        async function fetchRides() {
+            const response = await fetch('http://localhost:3000/rides');
+            const rides = await response.json();
+            const ridesList = document.getElementById('rides-list');
+            ridesList.innerHTML = '';
+
+            rides.forEach(ride => {
+                const rideCard = document.createElement('div');
+                rideCard.classList.add('ride-card');
+
+                rideCard.innerHTML = `
+                    <div>
+                        <h3>${ride.pickupLocation} to ${ride.destination}</h3>
+                        <p>Driver ID: ${ride.driverId}</p>
+                    </div>
+                    <div class="status ${ride.status}">
+                        ${ride.status}
+                    </div>
+                    ${ride.status === 'requested' ? `<button class="cancel-btn" onclick="cancelRide('${ride._id}')">Cancel Ride</button>` : ''}
+                `;
+
+                ridesList.appendChild(rideCard);
+            });
+        }
+
+        // Fetch and display rides when the page loads
+        fetchRides();
+
+        // Add new ride to the database
+        document.getElementById('ride-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const newRide = {
+                pickupLocation: document.getElementById('pickupLocation').value,
+                destination: document.getElementById('destination').value,
+                driverId: document.getElementById('driverId').value,
+                status: document.getElementById('status').value,
+            };
+
+            await fetch('http://localhost:3000/rides', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newRide),
+            });
+
+            // Reset form and fetch updated rides
+            document.getElementById('ride-form').reset();
+            fetchRides();
+        });
+
+        // Function to handle status change to 'cancelled'
+        async function cancelRide(rideId) {
+            await fetch(`http://localhost:3000/rides/${rideId}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: 'cancelled' })
+            });
+
+            fetchRides(); // Refresh the ride list
+        }
+    </script>
+
+</body>
+</html>
