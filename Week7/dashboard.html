@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Passenger Analytics Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <h1 class="mb-4 text-center">Passenger Analytics Dashboard</h1>
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>Name</th>
+          <th>Total Rides</th>
+          <th>Total Fare</th>
+          <th>Total Distance (km)</th>
+        </tr>
+      </thead>
+      <tbody id="analytics-body">
+        <!-- Data will be inserted here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    async function fetchAnalytics() {
+      try {
+        const response = await fetch('http://localhost:3000/admin/analytic/passenger');
+        const data = await response.json();
+        const tbody = document.getElementById('analytics-body');
+
+        data.forEach(user => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${user.name}</td>
+            <td>${user.totalRides}</td>
+            <td>$${user.totalFare.toFixed(2)}</td>
+            <td>${user.totalDistance.toFixed(2)}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } catch (error) {
+        console.error('Error fetching analytics:', error);
+      }
+    }
+
+    window.onload = fetchAnalytics;
+  </script>
+</body>
+</html>
